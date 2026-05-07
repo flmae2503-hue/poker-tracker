@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poker Full Ring AI Tracker</title>
+    <title>Poker Pro AI Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #f1f5f9; font-family: sans-serif; }
@@ -20,33 +20,31 @@
     <header class="mb-6 flex justify-between items-center">
         <div>
             <h1 class="text-xl font-black text-blue-400 italic">POKER PRO AI</h1>
-            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Wugu Rounder Edition</p>
+            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Full Ring Edition</p>
         </div>
-        <div class="text-[10px] text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">Cloud Connected</div>
+        <div class="text-[10px] text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">Cloud Ready</div>
     </header>
 
     <div class="glass-card">
         <label class="text-xs font-bold text-slate-400 uppercase mb-2 block">10 人桌位置</label>
-        <div class="space-y-1">
-            <span class="pos-label">前期 (EP)</span>
-            <div class="grid grid-cols-3 gap-2">
-                <div class="pos-btn" onclick="setPos(this)">UTG</div>
-                <div class="pos-btn" onclick="setPos(this)">UTG+1</div>
-                <div class="pos-btn" onclick="setPos(this)">UTG+2</div>
-            </div>
-            <span class="pos-label">中期 (MP)</span>
-            <div class="grid grid-cols-3 gap-2">
-                <div class="pos-btn" onclick="setPos(this)">MP1</div>
-                <div class="pos-btn" onclick="setPos(this)">LJ</div>
-                <div class="pos-btn" onclick="setPos(this)">HJ</div>
-            </div>
-            <span class="pos-label">後期 / 盲注 (LP/Blinds)</span>
-            <div class="grid grid-cols-4 gap-2">
-                <div class="pos-btn" onclick="setPos(this)">CO</div>
-                <div class="pos-btn" onclick="setPos(this)">BTN</div>
-                <div class="pos-btn" onclick="setPos(this)">SB</div>
-                <div class="pos-btn" onclick="setPos(this)">BB</div>
-            </div>
+        <span class="pos-label">前期 (EP)</span>
+        <div class="grid grid-cols-3 gap-2">
+            <div class="pos-btn" onclick="setPos(this)">UTG</div>
+            <div class="pos-btn" onclick="setPos(this)">UTG+1</div>
+            <div class="pos-btn" onclick="setPos(this)">UTG+2</div>
+        </div>
+        <span class="pos-label">中期 (MP)</span>
+        <div class="grid grid-cols-3 gap-2">
+            <div class="pos-btn" onclick="setPos(this)">MP1</div>
+            <div class="pos-btn" onclick="setPos(this)">LJ</div>
+            <div class="pos-btn" onclick="setPos(this)">HJ</div>
+        </div>
+        <span class="pos-label">後期 / 盲注 (LP/Blinds)</span>
+        <div class="grid grid-cols-4 gap-2">
+            <div class="pos-btn" onclick="setPos(this)">CO</div>
+            <div class="pos-btn" onclick="setPos(this)">BTN</div>
+            <div class="pos-btn" onclick="setPos(this)">SB</div>
+            <div class="pos-btn" onclick="setPos(this)">BB</div>
         </div>
     </div>
 
@@ -63,7 +61,7 @@
         </div>
         <div class="mb-4">
             <label class="text-xs text-slate-500 mb-1 block">過程敘述</label>
-            <textarea id="action" class="input-field" rows="2" placeholder="對手 Shove, I Call..."></textarea>
+            <textarea id="action" class="input-field" rows="2" placeholder="動作敘述..."></textarea>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <div>
@@ -71,8 +69,8 @@
                 <input type="number" id="profit" class="input-field" placeholder="+2500">
             </div>
             <div>
-                <label class="text-xs text-slate-500 mb-1 block">備註/檢討</label>
-                <input type="text" id="note" class="input-field" placeholder="心得紀錄...">
+                <label class="text-xs text-slate-500 mb-1 block">心得紀錄</label>
+                <input type="text" id="note" class="input-field" placeholder="備註...">
             </div>
         </div>
     </div>
@@ -88,17 +86,19 @@
 
     <div id="aiResponse" class="hidden mt-4 glass-card border-purple-500/50 bg-purple-900/10 p-4 text-sm text-purple-200">
         <div class="flex items-center mb-2">
-            <span class="text-[10px] bg-purple-500 text-white px-1.5 py-0.5 rounded font-bold mr-2 tracking-widest">COACH GEMINI</span>
+            <span class="text-[10px] bg-purple-500 text-white px-1.5 py-0.5 rounded font-bold mr-2 tracking-widest uppercase">Coach Gemini</span>
             <div class="h-px flex-1 bg-purple-500/20"></div>
         </div>
-        <p id="aiText" class="italic leading-relaxed">正在讀取牌局...</p>
+        <p id="aiText" class="italic leading-relaxed whitespace-pre-wrap">正在讀取牌局...</p>
     </div>
 
     <div id="status" class="mt-4 text-center text-xs font-bold h-4"></div>
     <div id="history" class="mt-6 space-y-3"></div>
 
     <script>
+        // ⚠️ 請填入你的 Google Apps Script 網址 ⚠️
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxystOwh-sfTCBFgGjki25IAirm_WUk_Vqkkd4fYLqGcbZsPS2jkBCRoJNUJoNF3iE8/exec';
+        
         let currentPos = '';
 
         function setPos(el) {
@@ -109,19 +109,18 @@
 
         async function analyzeWithAI() {
             if(!currentPos || !document.getElementById('hand').value) {
-                alert("請先選擇位置和手牌！");
-                return;
+                alert("請填寫位置與手牌"); return;
             }
             const aiText = document.getElementById('aiText');
             const aiResponse = document.getElementById('aiResponse');
             const aiBtn = document.getElementById('aiBtn');
             
             aiResponse.classList.remove('hidden');
-            aiText.innerText = "教練正在思考這手牌的期望值與範圍...";
+            aiText.innerText = "教練正在分析中...";
             aiBtn.disabled = true;
 
             const data = {
-                type: "ANALYZE_HAND",
+                type: "ANALYZE_HAND", // 關鍵指令
                 pos: currentPos,
                 hand: document.getElementById('hand').value,
                 stack: document.getElementById('stack').value,
@@ -134,14 +133,14 @@
                 const res = await response.json();
                 aiText.innerText = res.result;
             } catch (e) {
-                aiText.innerText = "分析出錯，請檢查雲端設定。";
+                aiText.innerText = "AI 連線失敗，請確認雲端部署版本。";
             } finally {
                 aiBtn.disabled = false;
             }
         }
 
         async function saveToCloud() {
-            if(!currentPos) { alert("請選擇位置！"); return; }
+            if(!currentPos) { alert("請選位置"); return; }
             const saveBtn = document.getElementById('saveBtn');
             const status = document.getElementById('status');
             
@@ -149,7 +148,7 @@
             document.body.classList.add('loading');
 
             const data = {
-                type: "SAVE_HAND",
+                type: "SAVE_HAND", // 關鍵指令
                 pos: currentPos,
                 hand: document.getElementById('hand').value,
                 stack: document.getElementById('stack').value,
@@ -163,16 +162,14 @@
                 status.innerText = "✅ 已成功寫入 Google Sheets";
                 status.className = "mt-4 text-center text-xs font-bold h-4 text-emerald-400";
                 
-                // 本地顯示紀錄
                 updateLocalHistory(data);
                 
-                // 清空輸入
                 document.getElementById('hand').value = '';
                 document.getElementById('action').value = '';
                 document.getElementById('profit').value = '';
                 document.getElementById('note').value = '';
             } catch (e) {
-                status.innerText = "❌ 雲端同步失敗";
+                status.innerText = "❌ 儲存失敗";
                 status.className = "mt-4 text-center text-xs font-bold h-4 text-red-400";
             } finally {
                 saveBtn.innerText = "💾 儲存紀錄至雲端";
@@ -182,18 +179,18 @@
         }
 
         function updateLocalHistory(data) {
-            let history = JSON.parse(localStorage.getItem('poker_pro_history') || '[]');
+            let history = JSON.parse(localStorage.getItem('poker_pro_history_v2') || '[]');
             data.time = new Date().toLocaleTimeString();
             history.unshift(data);
             if(history.length > 5) history.pop();
-            localStorage.setItem('poker_pro_history', JSON.stringify(history));
+            localStorage.setItem('poker_pro_history_v2', JSON.stringify(history));
             renderHistory();
         }
 
         function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('poker_pro_history') || '[]');
+            const history = JSON.parse(localStorage.getItem('poker_pro_history_v2') || '[]');
             const container = document.getElementById('history');
-            container.innerHTML = '<h2 class="text-slate-500 text-[10px] font-bold mb-3 uppercase text-center tracking-widest">Recent Logs</h2>';
+            container.innerHTML = '<h2 class="text-slate-500 text-[10px] font-bold mb-3 uppercase text-center">Recent Logs</h2>';
             history.forEach(h => {
                 const win = parseFloat(h.profit) >= 0;
                 container.innerHTML += `
@@ -207,10 +204,6 @@
                 `;
             });
         }
-        window.onload = renderHistory;
-    </script>
-</body>
-</html>
         window.onload = renderHistory;
     </script>
 </body>
