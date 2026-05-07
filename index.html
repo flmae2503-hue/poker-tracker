@@ -7,71 +7,76 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #f1f5f9; font-family: sans-serif; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; padding: 12px; width: 100%; font-size: 16px; }
-        .pos-btn { background: #1e293b; border: 1px solid #475569; border-radius: 8px; padding: 10px 0; text-align: center; font-size: 12px; cursor: pointer; transition: 0.2s; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; padding: 12px; width: 100%; font-size: 16px; display: block; margin-top: 4px; }
+        .input-field:focus { border-color: #38bdf8; outline: none; }
+        .pos-btn { background: #1e293b; border: 1px solid #475569; border-radius: 8px; padding: 10px 0; text-align: center; font-size: 12px; cursor: pointer; }
         .pos-btn.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; font-weight: bold; }
-        .pos-label { font-size: 11px; color: #94a3b8; font-weight: bold; margin-bottom: 6px; margin-top: 10px; display: block; text-transform: uppercase; }
+        .label-text { font-size: 11px; color: #94a3b8; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block; }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-20">
 
     <header class="mb-6 flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-black text-blue-400 italic tracking-tighter">POKER PRO AI</h1>
-            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Wugu Rounder Elite Edition</p>
+            <h1 class="text-2xl font-black text-blue-400 italic">POKER PRO AI</h1>
+            <p class="text-[10px] text-slate-500 tracking-widest">WUGU ROUNDER V3.3</p>
         </div>
-        <div class="text-[9px] text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20 font-bold">SYSTEM ONLINE</div>
+        <div class="text-[9px] text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20 font-bold italic">LIVE</div>
     </header>
 
     <div class="glass-card">
-        <label class="text-xs font-bold text-slate-300 uppercase mb-3 block">Position / 牌桌位置</label>
+        <label class="label-text text-slate-300">Position / 位置</label>
         
-        <span class="pos-label">Early (EP)</span>
-        <div class="grid grid-cols-3 gap-2">
-            <div class="pos-btn" onclick="setPos(this)">UTG</div>
-            <div class="pos-btn" onclick="setPos(this)">UTG+1</div>
-            <div class="pos-btn" onclick="setPos(this)">UTG+2</div>
+        <div class="mb-2">
+            <span class="text-[10px] text-slate-500 mb-1 block">EARLY (EP)</span>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="pos-btn" onclick="setPos(this)">UTG</div>
+                <div class="pos-btn" onclick="setPos(this)">UTG+1</div>
+                <div class="pos-btn" onclick="setPos(this)">UTG+2</div>
+            </div>
         </div>
 
-        <span class="pos-label">Middle (MP)</span>
-        <div class="grid grid-cols-3 gap-2">
-            <div class="pos-btn" onclick="setPos(this)">MP1</div>
-            <div class="pos-btn" onclick="setPos(this)">LJ</div>
-            <div class="pos-btn" onclick="setPos(this)">HJ</div>
+        <div class="mb-2">
+            <span class="text-[10px] text-slate-500 mb-1 block">MIDDLE (MP)</span>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="pos-btn" onclick="setPos(this)">MP1</div>
+                <div class="pos-btn" onclick="setPos(this)">LJ</div>
+                <div class="pos-btn" onclick="setPos(this)">HJ</div>
+            </div>
         </div>
 
-        <span class="pos-label">Late / Blinds (LP)</span>
-        <div class="grid grid-cols-4 gap-2">
-            <div class="pos-btn" onclick="setPos(this)">CO</div>
-            <div class="pos-btn" onclick="setPos(this)">BTN</div>
-            <div class="pos-btn" onclick="setPos(this)">SB</div>
-            <div class="pos-btn" onclick="setPos(this)">BB</div>
+        <div>
+            <span class="text-[10px] text-slate-500 mb-1 block">LATE / BLINDS</span>
+            <div class="grid grid-cols-4 gap-2">
+                <div class="pos-btn" onclick="setPos(this)">CO</div>
+                <div class="pos-btn" onclick="setPos(this)">BTN</div>
+                <div class="pos-btn" onclick="setPos(this)">SB</div>
+                <div class="pos-btn" onclick="setPos(this)">BB</div>
+            </div>
         </div>
     </div>
 
-    <div class="glass-card">
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div>
-                <label class="text-[11px] text-slate-400 mb-1 block">我的手牌</label>
-                <input type="text" id="hand" class="input-field" placeholder="AA, 66...">
-            </div>
-            <div>
-                <label class="text-[11px] text-slate-400 mb-1 block">深度 (bb)</label>
-                <input type="number" id="stack" class="input-field" placeholder="100">
-            </div>
+    <div class="glass-card space-y-4">
+        <div>
+            <label class="label-text">我的手牌 (Hand)</label>
+            <input type="text" id="hand" class="input-field" placeholder="例如: AA, AKs, 66">
         </div>
-        <div class="mb-4">
-            <label class="text-[11px] text-slate-400 mb-1 block">過程敘述 (Action)</label>
-            <textarea id="action" class="input-field" rows="2" placeholder="敘述對手動作..."></textarea>
+        <div>
+            <label class="label-text">有效深度 (Stack bb)</label>
+            <input type="number" id="stack" class="input-field" placeholder="100">
+        </div>
+        <div>
+            <label class="label-text">過程敘述 (Action)</label>
+            <textarea id="action" class="input-field" rows="2" placeholder="對手 Open, 我 3-bet..."></textarea>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="text-[11px] text-slate-400 mb-1 block">盈虧 (Profit)</label>
+                <label class="label-text">盈虧 (Profit)</label>
                 <input type="number" id="profit" class="input-field" placeholder="+2500">
             </div>
             <div>
-                <label class="text-[11px] text-slate-400 mb-1 block">備註</label>
+                <label class="label-text">備註 (Note)</label>
                 <input type="text" id="note" class="input-field" placeholder="筆記...">
             </div>
         </div>
@@ -97,7 +102,6 @@
     <div id="status" class="mt-4 text-center text-xs font-bold h-4 text-emerald-400"></div>
 
     <script>
-        // 確認網址是否正確
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby589MmmL2E5D7zKMzwSuwpAdGvYyN6q6S7iZw5ivpU0DHDkplt7FOkEcd2mU9q-17J/exec';
         let currentPos = '';
 
@@ -108,15 +112,48 @@
         }
 
         async function analyzeWithAI() {
-            if(!currentPos || !document.getElementById('hand').value) { alert("請輸入位置與手牌"); return; }
+            const hand = document.getElementById('hand').value;
+            if(!currentPos || !hand) { alert("請填入位置與手牌"); return; }
             const aiText = document.getElementById('aiText');
             const aiBtn = document.getElementById('aiBtn');
             document.getElementById('aiResponse').classList.remove('hidden');
-            aiText.innerText = "教練分析中，請稍候...";
+            aiText.innerText = "教練正在研究牌局...";
             aiBtn.disabled = true;
 
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({
-                        type: "ANALYZE_
+                        type: "ANALYZE_HAND",
+                        pos: currentPos,
+                        hand: hand,
+                        stack: document.getElementById('stack').value,
+                        action: document.getElementById('action').value,
+                        note: document.getElementById('note').value
+                    })
+                });
+                const res = await response.json();
+                aiText.innerText = res.result;
+            } catch (e) { aiText.innerText = "連線失敗，請檢查網路或後台授權。"; }
+            finally { aiBtn.disabled = false; }
+        }
+
+        async function saveToCloud() {
+            if(!currentPos) { alert("請選位置"); return; }
+            const status = document.getElementById('status');
+            status.innerText = "正在儲存至雲端...";
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({
+                        type: "SAVE_HAND",
+                        pos: currentPos,
+                        hand: document.getElementById('hand').value,
+                        stack: document.getElementById('stack').value,
+                        action: document.getElementById('action').value,
+                        profit: document.getElementById('profit').value,
+                        note: document.getElementById('note').value
+                    })
+                });
+                status.innerText = "
