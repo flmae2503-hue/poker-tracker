@@ -3,38 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>POKER PRO AI</title>
+    <title>POKER PRO AI TRACKER</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: #f1f5f9; font-family: sans-serif; }
+        body { background-color: #0f172a; color: #f1f5f9; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; padding: 10px; width: 100%; font-size: 14px; }
+        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; padding: 10px; width: 100%; font-size: 14px; transition: border 0.2s; }
+        .input-field:focus { border-color: #38bdf8; outline: none; }
         .pos-btn { background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 8px 0; text-align: center; font-size: 11px; cursor: pointer; transition: 0.2s; }
         .pos-btn.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; font-weight: bold; }
-        .pos-label { font-size: 10px; color: #94a3b8; font-weight: bold; margin-bottom: 4px; margin-top: 8px; display: block; text-transform: uppercase; }
+        .pos-label { font-size: 10px; color: #94a3b8; font-weight: bold; margin-bottom: 4px; margin-top: 8px; display: block; text-transform: uppercase; letter-spacing: 0.05em; }
+        .btn-shadow { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-10">
 
-    <header class="mb-6">
-        <h1 class="text-2xl font-black text-blue-400 italic">POKER PRO AI</h1>
-        <p class="text-[10px] text-slate-500 uppercase tracking-widest">Wugu Rounder Elite</p>
+    <header class="mb-6 flex justify-between items-end">
+        <div>
+            <h1 class="text-2xl font-black text-blue-400 tracking-tighter italic">POKER PRO <span class="text-white">AI</span></h1>
+            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Wugu Rounder Elite Edition</p>
+        </div>
+        <div class="text-[9px] text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20 font-bold mb-1">SYSTEM ONLINE</div>
     </header>
 
     <div class="glass-card">
-        <label class="text-xs font-bold text-slate-400 uppercase mb-3 block">Position / 位置</label>
+        <label class="text-xs font-bold text-slate-400 uppercase mb-3 block">Position / 牌桌位置</label>
+        
         <span class="pos-label">Early (EP)</span>
         <div class="grid grid-cols-3 gap-2">
             <div class="pos-btn" onclick="setPos(this)">UTG</div>
             <div class="pos-btn" onclick="setPos(this)">UTG+1</div>
             <div class="pos-btn" onclick="setPos(this)">UTG+2</div>
         </div>
+
         <span class="pos-label">Middle (MP)</span>
         <div class="grid grid-cols-3 gap-2">
             <div class="pos-btn" onclick="setPos(this)">MP1</div>
             <div class="pos-btn" onclick="setPos(this)">LJ</div>
             <div class="pos-btn" onclick="setPos(this)">HJ</div>
         </div>
+
         <span class="pos-label">Late / Blinds (LP)</span>
         <div class="grid grid-cols-4 gap-2">
             <div class="pos-btn" onclick="setPos(this)">CO</div>
@@ -45,93 +53,4 @@
     </div>
 
     <div class="glass-card">
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div><label class="text-xs text-slate-500 mb-1 block">我的手牌</label><input type="text" id="hand" class="input-field" placeholder="AA, 88..."></div>
-            <div><label class="text-xs text-slate-500 mb-1 block">深度 (bb)</label><input type="number" id="stack" class="input-field" placeholder="100"></div>
-        </div>
-        <div class="mb-4"><label class="text-xs text-slate-500 mb-1 block">過程敘述</label><textarea id="action" class="input-field" rows="2" placeholder="敘述過程..."></textarea></div>
-        <div class="grid grid-cols-2 gap-4">
-            <div><label class="text-xs text-slate-500 mb-1 block">盈虧 (Profit)</label><input type="number" id="profit" class="input-field" placeholder="+2500"></div>
-            <div><label class="text-xs text-slate-500 mb-1 block">心得/備註</label><input type="text" id="note" class="input-field" placeholder="筆記..."></div>
-        </div>
-    </div>
-
-    <div class="space-y-3">
-        <button id="aiBtn" onclick="analyzeWithAI()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg">🧠 Gemini 戰略分析</button>
-        <button id="saveBtn" onclick="saveToCloud()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg">💾 儲存紀錄至雲端</button>
-    </div>
-
-    <div id="aiResponse" class="hidden mt-6 glass-card border-purple-500/50 bg-purple-900/10 p-4">
-        <div class="flex items-center mb-3">
-            <span class="text-[10px] bg-purple-500 text-white px-2 py-0.5 rounded font-bold uppercase tracking-widest">Coach Gemini</span>
-            <div class="h-px flex-1 bg-purple-500/20 ml-3"></div>
-        </div>
-        <div id="aiText" class="text-sm text-purple-100 italic leading-relaxed whitespace-pre-wrap"></div>
-    </div>
-
-    <div id="status" class="mt-4 text-center text-xs font-bold h-4 text-emerald-400"></div>
-    <div id="history" class="mt-8 space-y-3"></div>
-
-    <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQMXWW5MXvDGLd6ypwkf4r0rY1eyn0rM1SynZZivn0gw5EIDrXceDB7j7yVNaPeti5/exec';
-        let currentPos = '';
-
-        function setPos(el) {
-            document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            currentPos = el.innerText;
-        }
-
-        async function analyzeWithAI() {
-            if(!currentPos || !document.getElementById('hand').value) { alert("請輸入位置與手牌"); return; }
-            const aiText = document.getElementById('aiText');
-            const aiBtn = document.getElementById('aiBtn');
-            
-            document.getElementById('aiResponse').classList.remove('hidden');
-            aiText.innerText = "教練分析中...";
-            aiBtn.disabled = true;
-
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        type: "ANALYZE_HAND",
-                        pos: currentPos,
-                        hand: document.getElementById('hand').value,
-                        stack: document.getElementById('stack').value,
-                        action: document.getElementById('action').value,
-                        note: document.getElementById('note').value
-                    })
-                });
-                const res = await response.json();
-                aiText.innerText = res.result;
-            } catch (e) { aiText.innerText = "連線失敗"; } 
-            finally { aiBtn.disabled = false; }
-        }
-
-        async function saveToCloud() {
-            if(!currentPos) { alert("請選位置"); return; }
-            const status = document.getElementById('status');
-            status.innerText = "上傳中...";
-
-            try {
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({
-                        type: "SAVE_HAND",
-                        pos: currentPos,
-                        hand: document.getElementById('hand').value,
-                        stack: document.getElementById('stack').value,
-                        action: document.getElementById('action').value,
-                        profit: document.getElementById('profit').value,
-                        note: document.getElementById('note').value
-                    })
-                });
-                status.innerText = "✅ 儲存成功";
-                setTimeout(() => status.innerText = "", 3000);
-            } catch (e) { status.innerText = "❌ 儲存失敗"; }
-        }
-    </script>
-</body>
-</html>
+        <div class="grid grid-cols-2 gap
