@@ -12,13 +12,14 @@
         .pos-btn { background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 8px 0; text-align: center; font-size: 11px; cursor: pointer; transition: 0.2s; }
         .pos-btn.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; font-weight: bold; }
         .pos-label { font-size: 10px; color: #64748b; font-weight: bold; margin-bottom: 4px; margin-top: 8px; display: block; }
+        .loading { opacity: 0.5; pointer-events: none; }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-20">
 
     <header class="mb-6">
-        <h1 class="text-xl font-black text-blue-400">FULL RING 戰筆記</h1>
-        <p class="text-[10px] text-slate-500 uppercase tracking-widest">10-Max Table Intelligence</p>
+        <h1 class="text-xl font-black text-blue-400">FULL RING 戰筆記 (Cloud)</h1>
+        <p class="text-[10px] text-slate-500 uppercase tracking-widest">已連接至雲端試算表</p>
     </header>
 
     <div class="glass-card">
@@ -47,7 +48,6 @@
         </div>
     </div>
 
-    <!-- 核心數據 -->
     <div class="glass-card">
         <div class="flex gap-4 mb-4">
             <div class="flex-1">
@@ -62,7 +62,7 @@
         
         <div class="mb-4">
             <label class="text-xs text-slate-500 mb-1 block">過程敘述</label>
-            <textarea id="action" class="input-field" rows="2" placeholder="UTG Open, I Call..."></textarea>
+            <textarea id="action" class="input-field" rows="2" placeholder="HJ All-in, I Call..."></textarea>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
@@ -72,18 +72,23 @@
             </div>
             <div>
                 <label class="text-xs text-slate-500 mb-1 block">檢討備註</label>
-                <input type="text" id="note" class="input-field" placeholder="太衝動了...">
+                <input type="text" id="note" class="input-field" placeholder="長期該跑嗎？">
             </div>
         </div>
     </div>
 
-    <button onclick="saveHand()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg">
-        儲存紀錄
+    <button id="saveBtn" onclick="saveHand()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg">
+        儲存紀錄至雲端
     </button>
+
+    <div id="status" class="mt-4 text-center text-sm font-bold h-6"></div>
 
     <div id="history" class="mt-8 space-y-3"></div>
 
     <script>
+        // 這是你的 Google Apps Script 網址
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxystOwh-sfTCBFgGjki25IAirm_WUk_Vqkkd4fYLqGcbZsPS2jkBCRoJNUJoNF3iE8/exec';
+
         let currentPos = '';
 
         function setPos(el) {
@@ -92,7 +97,12 @@
             currentPos = el.innerText;
         }
 
-        function saveHand() {
+        async function saveHand() {
+            if(!currentPos) {
+                alert("請選位置！");
+                return;
+            }
+
             const data = {
                 id: Date.now(),
                 pos: currentPos,
@@ -103,32 +113,62 @@
                 note: document.getElementById('note').value,
                 time: new Date().toLocaleString()
             };
+
+            const btn = document.getElementById('saveBtn');
+            const statusDiv = document.getElementById('status');
+            
+            // UI 狀態切換
+            document.body.classList.add('loading');
+            btn.innerText = "同步中...";
+            statusDiv.innerText = "";
+
+            // 1. 同時存入手機本地 (LocalStorage)
             let history = JSON.parse(localStorage.getItem('poker_10max') || '[]');
             history.unshift(data);
+            if(history.length > 20) history.pop(); // 保持手機顯示最近 20 筆
             localStorage.setItem('poker_10max', JSON.stringify(history));
             renderHistory();
-            
-            // 清除輸入
-            document.getElementById('hand').value = '';
-            document.getElementById('action').value = '';
-            document.getElementById('profit').value = '';
-            document.getElementById('note').value = '';
+
+            // 2. 透過 API 傳送到 Google Sheets
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(data)
+                });
+                
+                statusDiv.innerText = "✅ 成功寫入 Google Sheets！";
+                statusDiv.className = "mt-4 text-center text-sm font-bold h-6 text-emerald-400";
+                
+                // 清空輸入
+                document.getElementById('hand').value = '';
+                document.getElementById('action').value = '';
+                document.getElementById('profit').value = '';
+                document.getElementById('note').value = '';
+                
+            } catch (e) {
+                statusDiv.innerText = "❌ 雲端同步失敗，僅存於手機本地。";
+                statusDiv.className = "mt-4 text-center text-sm font-bold h-6 text-red-400";
+            } finally {
+                document.body.classList.remove('loading');
+                btn.innerText = "儲存紀錄至雲端";
+                setTimeout(() => statusDiv.innerText = "", 3000);
+            }
         }
 
         function renderHistory() {
             const history = JSON.parse(localStorage.getItem('poker_10max') || '[]');
             const container = document.getElementById('history');
-            container.innerHTML = '<h2 class="text-slate-500 text-[10px] font-bold mb-3 uppercase tracking-tighter">History</h2>';
+            container.innerHTML = '<h2 class="text-slate-500 text-[10px] font-bold mb-3 uppercase tracking-tighter text-center">Recent Local History</h2>';
             history.forEach(h => {
                 const win = parseFloat(h.profit) >= 0;
                 container.innerHTML += `
                     <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 text-sm">
                         <div class="flex justify-between mb-1">
                             <span class="text-blue-400 font-bold">${h.pos} | ${h.hand}</span>
-                            <span class="${win ? 'text-emerald-400' : 'text-red-400'} font-mono">${h.profit}</span>
+                            <span class="${win ? 'text-emerald-400' : 'text-red-400'} font-mono">${h.profit || 0}</span>
                         </div>
                         <div class="text-[11px] text-slate-400 leading-tight">${h.action}</div>
-                        <div class="text-[10px] text-slate-500 mt-2 italic">Note: ${h.note}</div>
                     </div>
                 `;
             });
