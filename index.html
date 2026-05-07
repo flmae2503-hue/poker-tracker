@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poker Full Ring Tracker</title>
+    <title>Poker Full Ring AI Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #f1f5f9; font-family: sans-serif; }
@@ -17,34 +17,36 @@
 </head>
 <body class="p-4 max-w-lg mx-auto pb-20">
 
-    <header class="mb-6">
-        <h1 class="text-xl font-black text-blue-400">FULL RING 戰筆記 (Cloud)</h1>
-        <p class="text-[10px] text-slate-500 uppercase tracking-widest">已連接至雲端試算表</p>
+    <header class="mb-6 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-black text-blue-400 italic">POKER PRO AI</h1>
+            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Wugu Rounder Edition</p>
+        </div>
+        <div class="text-[10px] text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">Cloud Connected</div>
     </header>
 
     <div class="glass-card">
-        <label class="text-xs font-bold text-slate-400 uppercase mb-2 block">10 人桌位置選擇</label>
-        
-        <span class="pos-label">前期位 (EP)</span>
-        <div class="grid grid-cols-3 gap-2">
-            <div class="pos-btn" onclick="setPos(this)">UTG</div>
-            <div class="pos-btn" onclick="setPos(this)">UTG+1</div>
-            <div class="pos-btn" onclick="setPos(this)">UTG+2</div>
-        </div>
-
-        <span class="pos-label">中期位 (MP)</span>
-        <div class="grid grid-cols-3 gap-2">
-            <div class="pos-btn" onclick="setPos(this)">MP1</div>
-            <div class="pos-btn" onclick="setPos(this)">LJ</div>
-            <div class="pos-btn" onclick="setPos(this)">HJ</div>
-        </div>
-
-        <span class="pos-label">後期位與盲注 (LP / Blinds)</span>
-        <div class="grid grid-cols-4 gap-2">
-            <div class="pos-btn" onclick="setPos(this)">CO</div>
-            <div class="pos-btn" onclick="setPos(this)">BTN</div>
-            <div class="pos-btn" onclick="setPos(this)">SB</div>
-            <div class="pos-btn" onclick="setPos(this)">BB</div>
+        <label class="text-xs font-bold text-slate-400 uppercase mb-2 block">10 人桌位置</label>
+        <div class="space-y-1">
+            <span class="pos-label">前期 (EP)</span>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="pos-btn" onclick="setPos(this)">UTG</div>
+                <div class="pos-btn" onclick="setPos(this)">UTG+1</div>
+                <div class="pos-btn" onclick="setPos(this)">UTG+2</div>
+            </div>
+            <span class="pos-label">中期 (MP)</span>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="pos-btn" onclick="setPos(this)">MP1</div>
+                <div class="pos-btn" onclick="setPos(this)">LJ</div>
+                <div class="pos-btn" onclick="setPos(this)">HJ</div>
+            </div>
+            <span class="pos-label">後期 / 盲注 (LP/Blinds)</span>
+            <div class="grid grid-cols-4 gap-2">
+                <div class="pos-btn" onclick="setPos(this)">CO</div>
+                <div class="pos-btn" onclick="setPos(this)">BTN</div>
+                <div class="pos-btn" onclick="setPos(this)">SB</div>
+                <div class="pos-btn" onclick="setPos(this)">BB</div>
+            </div>
         </div>
     </div>
 
@@ -55,40 +57,48 @@
                 <input type="text" id="hand" class="input-field" placeholder="例如: 88">
             </div>
             <div class="flex-1">
-                <label class="text-xs text-slate-500 mb-1 block">有效籌碼 (bb)</label>
+                <label class="text-xs text-slate-500 mb-1 block">有效深度 (bb)</label>
                 <input type="number" id="stack" class="input-field" placeholder="100">
             </div>
         </div>
-        
         <div class="mb-4">
             <label class="text-xs text-slate-500 mb-1 block">過程敘述</label>
-            <textarea id="action" class="input-field" rows="2" placeholder="HJ All-in, I Call..."></textarea>
+            <textarea id="action" class="input-field" rows="2" placeholder="對手 Shove, I Call..."></textarea>
         </div>
-
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="text-xs text-slate-500 mb-1 block">盈虧 (Profit)</label>
                 <input type="number" id="profit" class="input-field" placeholder="+2500">
             </div>
             <div>
-                <label class="text-xs text-slate-500 mb-1 block">檢討備註</label>
-                <input type="text" id="note" class="input-field" placeholder="長期該跑嗎？">
+                <label class="text-xs text-slate-500 mb-1 block">備註/檢討</label>
+                <input type="text" id="note" class="input-field" placeholder="心得紀錄...">
             </div>
         </div>
     </div>
 
-    <button id="saveBtn" onclick="saveHand()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg">
-        儲存紀錄至雲端
-    </button>
+    <div class="space-y-3">
+        <button id="aiBtn" onclick="analyzeWithAI()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-lg border border-purple-400/30">
+            🧠 Gemini 戰略分析
+        </button>
+        <button id="saveBtn" onclick="saveToCloud()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-lg">
+            💾 儲存紀錄至雲端
+        </button>
+    </div>
 
-    <div id="status" class="mt-4 text-center text-sm font-bold h-6"></div>
+    <div id="aiResponse" class="hidden mt-4 glass-card border-purple-500/50 bg-purple-900/10 p-4 text-sm text-purple-200">
+        <div class="flex items-center mb-2">
+            <span class="text-[10px] bg-purple-500 text-white px-1.5 py-0.5 rounded font-bold mr-2 tracking-widest">COACH GEMINI</span>
+            <div class="h-px flex-1 bg-purple-500/20"></div>
+        </div>
+        <p id="aiText" class="italic leading-relaxed">正在讀取牌局...</p>
+    </div>
 
-    <div id="history" class="mt-8 space-y-3"></div>
+    <div id="status" class="mt-4 text-center text-xs font-bold h-4"></div>
+    <div id="history" class="mt-6 space-y-3"></div>
 
     <script>
-        // 這是你的 Google Apps Script 網址
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxystOwh-sfTCBFgGjki25IAirm_WUk_Vqkkd4fYLqGcbZsPS2jkBCRoJNUJoNF3iE8/exec';
-
         let currentPos = '';
 
         function setPos(el) {
@@ -97,69 +107,93 @@
             currentPos = el.innerText;
         }
 
-        async function saveHand() {
-            if(!currentPos) {
-                alert("請選位置！");
+        async function analyzeWithAI() {
+            if(!currentPos || !document.getElementById('hand').value) {
+                alert("請先選擇位置和手牌！");
                 return;
             }
+            const aiText = document.getElementById('aiText');
+            const aiResponse = document.getElementById('aiResponse');
+            const aiBtn = document.getElementById('aiBtn');
+            
+            aiResponse.classList.remove('hidden');
+            aiText.innerText = "教練正在思考這手牌的期望值與範圍...";
+            aiBtn.disabled = true;
 
             const data = {
-                id: Date.now(),
+                type: "ANALYZE_HAND",
+                pos: currentPos,
+                hand: document.getElementById('hand').value,
+                stack: document.getElementById('stack').value,
+                action: document.getElementById('action').value,
+                note: document.getElementById('note').value
+            };
+
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+                const res = await response.json();
+                aiText.innerText = res.result;
+            } catch (e) {
+                aiText.innerText = "分析出錯，請檢查雲端設定。";
+            } finally {
+                aiBtn.disabled = false;
+            }
+        }
+
+        async function saveToCloud() {
+            if(!currentPos) { alert("請選擇位置！"); return; }
+            const saveBtn = document.getElementById('saveBtn');
+            const status = document.getElementById('status');
+            
+            saveBtn.innerText = "同步中...";
+            document.body.classList.add('loading');
+
+            const data = {
+                type: "SAVE_HAND",
                 pos: currentPos,
                 hand: document.getElementById('hand').value,
                 stack: document.getElementById('stack').value,
                 action: document.getElementById('action').value,
                 profit: document.getElementById('profit').value,
-                note: document.getElementById('note').value,
-                time: new Date().toLocaleString()
+                note: document.getElementById('note').value
             };
 
-            const btn = document.getElementById('saveBtn');
-            const statusDiv = document.getElementById('status');
-            
-            // UI 狀態切換
-            document.body.classList.add('loading');
-            btn.innerText = "同步中...";
-            statusDiv.innerText = "";
-
-            // 1. 同時存入手機本地 (LocalStorage)
-            let history = JSON.parse(localStorage.getItem('poker_10max') || '[]');
-            history.unshift(data);
-            if(history.length > 20) history.pop(); // 保持手機顯示最近 20 筆
-            localStorage.setItem('poker_10max', JSON.stringify(history));
-            renderHistory();
-
-            // 2. 透過 API 傳送到 Google Sheets
             try {
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(data)
-                });
+                await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+                status.innerText = "✅ 已成功寫入 Google Sheets";
+                status.className = "mt-4 text-center text-xs font-bold h-4 text-emerald-400";
                 
-                statusDiv.innerText = "✅ 成功寫入 Google Sheets！";
-                statusDiv.className = "mt-4 text-center text-sm font-bold h-6 text-emerald-400";
+                // 本地顯示紀錄
+                updateLocalHistory(data);
                 
                 // 清空輸入
                 document.getElementById('hand').value = '';
                 document.getElementById('action').value = '';
                 document.getElementById('profit').value = '';
                 document.getElementById('note').value = '';
-                
             } catch (e) {
-                statusDiv.innerText = "❌ 雲端同步失敗，僅存於手機本地。";
-                statusDiv.className = "mt-4 text-center text-sm font-bold h-6 text-red-400";
+                status.innerText = "❌ 雲端同步失敗";
+                status.className = "mt-4 text-center text-xs font-bold h-4 text-red-400";
             } finally {
+                saveBtn.innerText = "💾 儲存紀錄至雲端";
                 document.body.classList.remove('loading');
-                btn.innerText = "儲存紀錄至雲端";
-                setTimeout(() => statusDiv.innerText = "", 3000);
+                setTimeout(() => status.innerText = "", 3000);
             }
         }
 
+        function updateLocalHistory(data) {
+            let history = JSON.parse(localStorage.getItem('poker_pro_history') || '[]');
+            data.time = new Date().toLocaleTimeString();
+            history.unshift(data);
+            if(history.length > 5) history.pop();
+            localStorage.setItem('poker_pro_history', JSON.stringify(history));
+            renderHistory();
+        }
+
         function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('poker_10max') || '[]');
+            const history = JSON.parse(localStorage.getItem('poker_pro_history') || '[]');
             const container = document.getElementById('history');
-            container.innerHTML = '<h2 class="text-slate-500 text-[10px] font-bold mb-3 uppercase tracking-tighter text-center">Recent Local History</h2>';
+            container.innerHTML = '<h2 class="text-slate-500 text-[10px] font-bold mb-3 uppercase text-center tracking-widest">Recent Logs</h2>';
             history.forEach(h => {
                 const win = parseFloat(h.profit) >= 0;
                 container.innerHTML += `
@@ -168,11 +202,15 @@
                             <span class="text-blue-400 font-bold">${h.pos} | ${h.hand}</span>
                             <span class="${win ? 'text-emerald-400' : 'text-red-400'} font-mono">${h.profit || 0}</span>
                         </div>
-                        <div class="text-[11px] text-slate-400 leading-tight">${h.action}</div>
+                        <div class="text-[10px] text-slate-500 leading-tight">${h.action}</div>
                     </div>
                 `;
             });
         }
+        window.onload = renderHistory;
+    </script>
+</body>
+</html>
         window.onload = renderHistory;
     </script>
 </body>
