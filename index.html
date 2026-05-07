@@ -3,46 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>POKER PRO AI TRACKER</title>
+    <title>POKER PRO AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: #f1f5f9; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #0f172a; color: #f1f5f9; font-family: sans-serif; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; padding: 10px; width: 100%; font-size: 14px; transition: border 0.2s; }
-        .input-field:focus { border-color: #38bdf8; outline: none; }
+        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; padding: 10px; width: 100%; font-size: 14px; }
         .pos-btn { background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 8px 0; text-align: center; font-size: 11px; cursor: pointer; transition: 0.2s; }
         .pos-btn.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; font-weight: bold; }
-        .pos-label { font-size: 10px; color: #94a3b8; font-weight: bold; margin-bottom: 4px; margin-top: 8px; display: block; text-transform: uppercase; letter-spacing: 0.05em; }
-        .btn-shadow { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+        .pos-label { font-size: 10px; color: #94a3b8; font-weight: bold; margin-bottom: 4px; margin-top: 8px; display: block; text-transform: uppercase; }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-10">
 
-    <header class="mb-6 flex justify-between items-end">
-        <div>
-            <h1 class="text-2xl font-black text-blue-400 tracking-tighter italic">POKER PRO <span class="text-white">AI</span></h1>
-            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Wugu Rounder Elite Edition</p>
-        </div>
-        <div class="text-[9px] text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20 font-bold mb-1">SYSTEM ONLINE</div>
+    <header class="mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-black text-blue-400 italic">POKER PRO AI</h1>
+        <div class="text-[9px] text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20 tracking-widest">LIVE V3.2</div>
     </header>
 
     <div class="glass-card">
-        <label class="text-xs font-bold text-slate-400 uppercase mb-3 block">Position / 牌桌位置</label>
-        
+        <label class="text-xs font-bold text-slate-400 uppercase mb-3 block">Position / 位置</label>
         <span class="pos-label">Early (EP)</span>
         <div class="grid grid-cols-3 gap-2">
             <div class="pos-btn" onclick="setPos(this)">UTG</div>
             <div class="pos-btn" onclick="setPos(this)">UTG+1</div>
             <div class="pos-btn" onclick="setPos(this)">UTG+2</div>
         </div>
-
         <span class="pos-label">Middle (MP)</span>
         <div class="grid grid-cols-3 gap-2">
             <div class="pos-btn" onclick="setPos(this)">MP1</div>
             <div class="pos-btn" onclick="setPos(this)">LJ</div>
             <div class="pos-btn" onclick="setPos(this)">HJ</div>
         </div>
-
         <span class="pos-label">Late / Blinds (LP)</span>
         <div class="grid grid-cols-4 gap-2">
             <div class="pos-btn" onclick="setPos(this)">CO</div>
@@ -53,4 +45,6 @@
     </div>
 
     <div class="glass-card">
-        <div class="grid grid-cols-2 gap
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div><label class="text-xs text-slate-500 mb-1 block">我的手牌</label><input type="text" id="hand" class="input-field" placeholder="AA, AKs..."></div>
+            <div><label class="text-xs text-slate-500 mb-1 block">深度 (bb)</label><input type="number" id="stack" class="input
